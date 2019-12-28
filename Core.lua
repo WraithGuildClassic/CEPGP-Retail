@@ -72,7 +72,7 @@ CEPGP_suppress_announcements = false;
 STANDBYPERCENT = nil;
 STANDBYRANKS = {};
 SLOTWEIGHTS = {};
-DEFSLOTWEIGHTS = {["2HWEAPON"] = 2,["WEAPONMAINHAND"] = 1.5,["WEAPON"] = 1.5,["WEAPONOFFHAND"] = 0.5,["HOLDABLE"] = 0.5,["SHIELD"] = 0.5,["RANGED"] = 0.5,["RANGEDRIGHT"] = 0.5,["RELIC"] = 0.5,["HEAD"] = 1,["NECK"] = 0.5,["SHOULDER"] = 0.75,["CLOAK"] = 0.5,["CHEST"] = 1,["ROBE"] = 1,["WRIST"] = 0.5,["HAND"] = 0.75,["WAIST"] = 0.75,["LEGS"] = 1,["FEET"] = 0.75,["FINGER"] = 0.5,["TRINKET"] = 0.75};
+DEFSLOTWEIGHTS = {["2HWEAPON"] = 0.9,["WEAPONMAINHAND"] = 0.7,["WEAPON"] = 1.0,["WEAPONOFFHAND"] = 0.6,["HOLDABLE"] = 0.5,["SHIELD"] = 0.6,["RANGED"] = 0.6,["RANGEDRIGHT"] = 0.6,["RELIC"] = 0.5,["HEAD"] = 0.7,["NECK"] = 0.5,["SHOULDER"] = 0.6,["CLOAK"] = 0.5,["CHEST"] = 0.7,["ROBE"] = 0.7,["WRIST"] = 0.5,["HAND"] = 0.5,["WAIST"] = 0.5,["LEGS"] = 0.7,["FEET"] = 0.5,["FINGER"] = 0.6,["TRINKET"] = 0.75};
 AUTOEP = {};
 EPVALS = {};
 RECORDS = {};
@@ -91,7 +91,7 @@ local L = CEPGP_Locale:GetLocale("CEPGP")
 
 --[[ EVENT AND COMMAND HANDLER ]]--
 function CEPGP_OnEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)
-	
+
 	if event == "ADDON_LOADED" and arg1 == "CEPGP" then --arg1 = addon name
 		CEPGP_initialise();
 		
@@ -143,7 +143,8 @@ function CEPGP_OnEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ar
 			CEPGP_addToStandby(arg5);
 		end
 			
-	elseif (event == "CHAT_MSG_WHISPER" and string.lower(arg1) == string.lower(CEPGP_keyword) and CEPGP_distributing) or
+	elseif (event == "CHAT_MSG_RAID" and string.lower(arg1) == string.lower(CEPGP_keyword) and CEPGP_distributing) or
+		(event == "CHAT_MSG_RAID_LEADER" and string.lower(arg1) == string.lower(CEPGP_keyword) and CEPGP_distributing) or
 		(event == "CHAT_MSG_WHISPER" and string.lower(arg1) == "!info") or
 		(event == "CHAT_MSG_WHISPER" and (string.lower(arg1) == "!infoguild" or string.lower(arg1) == "!inforaid" or string.lower(arg1) == "!infoclass")) then
 			CEPGP_handleComms(event, arg1, arg5);
@@ -313,6 +314,7 @@ function CEPGP_RaidAssistLootClosed()
 		HideUIPanel(CEPGP_distribute);
 		HideUIPanel(CEPGP_loot_CEPGP_distributing);
 		HideUIPanel(distributing);
+		HideUIPanel(create_cdf);
 		CEPGP_distribute_item_tex:SetBackdrop(nil);
 		_G["CEPGP_distribute_item_tex"]:SetScript('OnEnter', function() end);
 		_G["CEPGP_distribute_item_name_frame"]:SetScript('OnClick', function() end);
@@ -321,6 +323,7 @@ end
 function CEPGP_RaidAssistLootDist(link, gp, raidwide) --raidwide refers to whether or not the ML would like everyone in the raid to be able to see the distribution window
 	if UnitIsGroupAssistant("player") or raidwide then --Only returns true if the unit is raid ASSIST, not raid leader
 		ShowUIPanel(distributing);
+		ShowUIPanel(create_cdf);
 		CEPGP_itemsTable = {};
 		CEPGP_UpdateLootScrollBar();
 		local name, iString, _, _, _, _, _, _, slot, tex = GetItemInfo(CEPGP_DistID);

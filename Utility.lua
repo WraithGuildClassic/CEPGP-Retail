@@ -9,7 +9,7 @@ function CEPGP_initialise()
 		CEPGP_notice = false;
 	end
 	if CHANNEL == nil then
-		CHANNEL = "GUILD";
+		CHANNEL = "RAID";
 	end
 	if CEPGP_lootChannel == nil then
 		CEPGP_lootChannel = "RAID";
@@ -24,7 +24,7 @@ function CEPGP_initialise()
 		MOD_COEF = 2;
 	end
 	if BASEGP == nil then
-		BASEGP = 1;
+		BASEGP = 3;
 	end
 	if CEPGP_min_threshold == nil then
 		CEPGP_min_threshold = 2;
@@ -1976,4 +1976,31 @@ function CEPGP_addPlugin(plugin)
 		return;
 	end
 	_G["CEPGP_button_options_plugins"]:Show();
+end
+
+function CEPGP_createCDF()
+	SendChatMessage("-------------", "RAID", CEPGP_LANGUAGE);
+	SendChatMessage("Loot CDF is: ", "RAID", CEPGP_LANGUAGE);
+
+	cdfMin = 1;
+	for name, id in pairs(CEPGP_itemsTable) do
+		local EP,GP = CEPGP_getEPGP(CEPGP_roster[name][5]);
+		PR = math.floor((tonumber(EP)/tonumber(GP))*1000)
+		cdfMin = cdfMin + PR
+	end
+	maxCDF = cdfMin - 1;
+
+	cdfMin = 1;
+	for name, id in pairs(CEPGP_itemsTable) do
+		local EP,GP = CEPGP_getEPGP(CEPGP_roster[name][5]);
+		PR = math.floor((tonumber(EP)/tonumber(GP))*1000)
+		pct = 100 * PR / maxCDF
+
+		SendChatMessage(cdfMin .. " - " .. PR .. " : " .. name .. " ( " .. pct .. "% )", "RAID", CEPGP_LANGUAGE);
+		cdfMin = cdfMin + PR
+	end
+	SendChatMessage("-------------", "RAID", CEPGP_LANGUAGE);
+	SendChatMessage("Master looter should use '/roll " .. maxCDF .. "'", "RAID", CEPGP_LANGUAGE);
+	SendChatMessage("-------------", "RAID", CEPGP_LANGUAGE);
+
 end

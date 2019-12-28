@@ -3,7 +3,7 @@ local L = CEPGP_Locale:GetLocale("CEPGP")
 function CEPGP_handleComms(event, arg1, arg2, response)
 	response = tonumber(response);
 	if not response then response = 5; end
-	if event == "CHAT_MSG_WHISPER" and string.lower(arg1) == string.lower(CEPGP_keyword) and CEPGP_distributing then
+	if (event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER") and string.lower(arg1) == string.lower(CEPGP_keyword) and CEPGP_distributing then
 		local duplicate = false;
 		for i = 1, table.getn(CEPGP_responses) do
 			if CEPGP_responses[i] == arg2 then
@@ -420,6 +420,7 @@ function CEPGP_handleLoot(event, arg1, arg2)
 		CEPGP_toggleGPEdit(true);
 		CEPGP_button_options_loot_gui:Enable();
 		CEPGP_distItemLink = nil;
+		_G["create_cdf"]:Hide();
 		_G["distributing"]:Hide();
 		if CEPGP_mode == "loot" then
 			CEPGP_cleanTable();
@@ -442,6 +443,7 @@ function CEPGP_handleLoot(event, arg1, arg2)
 			HideUIPanel(CEPGP_frame);
 			if CEPGP_isML() == 0 then
 				distributing:Hide();
+				create_cdf:Hide()
 			end
 		end
 		
@@ -500,6 +502,7 @@ function CEPGP_handleLoot(event, arg1, arg2)
 				CEPGP_distribute_popup:Hide();
 				CEPGP_distribute:Hide();
 				_G["distributing"]:Hide();
+				_G["create_cdf"]:Hide();
 				CEPGP_loot:Show();
 			else
 				CEPGP_distributing = false;
@@ -521,6 +524,7 @@ function CEPGP_handleLoot(event, arg1, arg2)
 				CEPGP_distribute_popup:Hide();
 				CEPGP_distribute:Hide();
 				_G["distributing"]:Hide();
+				_G["create_cdf"]:Hide();
 				CEPGP_loot:Show();
 			end
 		end
