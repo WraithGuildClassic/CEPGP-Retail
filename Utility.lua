@@ -1979,28 +1979,31 @@ function CEPGP_addPlugin(plugin)
 end
 
 function CEPGP_createCDF()
-	SendChatMessage("-------------", "RAID", CEPGP_LANGUAGE);
-	SendChatMessage("Loot CDF is: ", "RAID", CEPGP_LANGUAGE);
+	if (GetLootMethod() == "master" and CEPGP_isML() == 0) then
+		SendChatMessage("-------------", "RAID", CEPGP_LANGUAGE);
+		SendChatMessage("Loot CDF is: ", "RAID", CEPGP_LANGUAGE);
 
-	cdfMin = 1;
-	for name, id in pairs(CEPGP_itemsTable) do
-		local EP,GP = CEPGP_getEPGP(CEPGP_roster[name][5]);
-		PR = math.floor((tonumber(EP)/tonumber(GP))*1000)
-		cdfMin = cdfMin + PR
+		cdfMin = 1;
+		for name, id in pairs(CEPGP_itemsTable) do
+			local EP,GP = CEPGP_getEPGP(CEPGP_roster[name][5]);
+			PR = math.floor((tonumber(EP)/tonumber(GP))*1000)
+			cdfMin = cdfMin + PR
+		end
+		maxCDF = cdfMin - 1;
+
+		cdfMin = 1;
+		for name, id in pairs(CEPGP_itemsTable) do
+			local EP,GP = CEPGP_getEPGP(CEPGP_roster[name][5]);
+			if EP > 0 then
+				PR = math.floor((tonumber(EP)/tonumber(GP))*1000)
+				pct = string.format("%.2f", 100 * PR / maxCDF)
+
+				SendChatMessage(cdfMin .. " - " .. (cdfMin + PR - 1) .. " : " .. name .. " ( " .. pct .. "% )", "RAID", CEPGP_LANGUAGE);
+				cdfMin = cdfMin + PR
+			end
+		end
+		SendChatMessage("-------------", "RAID", CEPGP_LANGUAGE);
+		SendChatMessage("Master looter should use '/roll " .. maxCDF .. "'", "RAID", CEPGP_LANGUAGE);
+		SendChatMessage("-------------", "RAID", CEPGP_LANGUAGE);
 	end
-	maxCDF = cdfMin - 1;
-
-	cdfMin = 1;
-	for name, id in pairs(CEPGP_itemsTable) do
-		local EP,GP = CEPGP_getEPGP(CEPGP_roster[name][5]);
-		PR = math.floor((tonumber(EP)/tonumber(GP))*1000)
-		pct = 100 * PR / maxCDF
-
-		SendChatMessage(cdfMin .. " - " .. PR .. " : " .. name .. " ( " .. pct .. "% )", "RAID", CEPGP_LANGUAGE);
-		cdfMin = cdfMin + PR
-	end
-	SendChatMessage("-------------", "RAID", CEPGP_LANGUAGE);
-	SendChatMessage("Master looter should use '/roll " .. maxCDF .. "'", "RAID", CEPGP_LANGUAGE);
-	SendChatMessage("-------------", "RAID", CEPGP_LANGUAGE);
-
 end
