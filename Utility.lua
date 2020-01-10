@@ -2002,8 +2002,10 @@ function CEPGP_createCDF()
 				cdfMin = cdfMin + PR
 			end
 		end
+
 		SendChatMessage("-------------", "RAID", CEPGP_LANGUAGE);
-		SendChatMessage("Master looter should use '/roll " .. maxCDF .. "'", "RAID", CEPGP_LANGUAGE);
+		SendChatMessage("Performing '/roll " .. maxCDF .. "'", "RAID", CEPGP_LANGUAGE);
 		SendChatMessage("-------------", "RAID", CEPGP_LANGUAGE);
+		RandomRoll(1, maxCDF)
 	end
 end
