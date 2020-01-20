@@ -1501,6 +1501,18 @@ function CEPGP_deleteAttendance()
 	CEPGP_UpdateAttendanceScrollBar();
 end
 
+function CEPGP_getPaddingString(str, paddingCount)
+	paddingStr = "";
+	strLength = string.len(str);
+
+	while strLength < paddingCount do
+		paddingStr = paddingStr .. " ";
+		strLength = strLength + 1;
+	end
+
+	return paddingStr;
+end
+
 function CEPGP_formatExport()
 	--form is the export format
 	local temp = {};
@@ -1512,7 +1524,9 @@ function CEPGP_formatExport()
 			[2] = v[2], -- Class
 			[3] = v[3], -- Guild Rank
 			[4] = EP .. "," .. GP, -- Officer Note, processed like this incase the officer note is blank
-			[5] = v[6] -- Priority
+			[5] = v[6], -- Priority
+			[6] = EP,
+			[7] = GP
 		};
 	end
 	temp = CEPGP_tSort(temp, 1);
@@ -1564,6 +1578,32 @@ function CEPGP_formatExport()
 		text = text .. "],";
 		text = text .. "\"timestamp\":" .. time() .. "";
 		text = text .. "}";
+		_G["CEPGP_export_dump"]:SetText(text);
+		_G["CEPGP_export_dump"]:HighlightText();
+
+	elseif form == "Legible" then
+		temp = CEPGP_tSort(temp, 5);
+
+		for i = 1, #temp do
+			index = #temp - i + 1
+
+			if temp[index][6] > 0 then
+				namelen = string.len(temp[index][1])
+				text = text .. temp[index][1] .. CEPGP_getPaddingString(temp[index][1], 14);
+				if CEPGP_export_class_check:GetChecked() then
+					text = text .. temp[index][2] .. CEPGP_getPaddingString(temp[index][2], 14);
+				end
+				if CEPGP_export_rank_check:GetChecked() then
+					text = text .. temp[index][3] .. CEPGP_getPaddingString(temp[index][3], 16);
+				end
+				text = text .. "EP: " .. temp[index][6] .. CEPGP_getPaddingString(tostring(temp[index][6]), 6);
+				text = text .. "GP: " .. temp[index][7] .. CEPGP_getPaddingString(tostring(temp[index][7]), 6);
+				if CEPGP_export_PR_check:GetChecked() then
+					text = text .. "PR: " .. temp[index][5] .. CEPGP_getPaddingString(tostring(temp[index][5]), 6);
+				end
+				text = text .. "\n";
+			end
+		end
 		_G["CEPGP_export_dump"]:SetText(text);
 		_G["CEPGP_export_dump"]:HighlightText();
 	end

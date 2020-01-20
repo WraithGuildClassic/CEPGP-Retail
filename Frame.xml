@@ -6825,6 +6825,31 @@
 					</OnLeave>
 				</Scripts>
 			</Button>
+			<Button name="CEPGP_export_legible" inherits="GameMenuButtonTemplate" text="Format legible">
+				<Size>
+					<AbsDimension x="150" y="21" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="CEPGP_export_scrollframe">
+						<Offset>
+							<AbsDimension x="-5" y="-25" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						CEPGP_export:SetAttribute("format", "Legible");
+						CEPGP_formatExport();
+					</OnClick>
+					<OnEnter>
+						GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
+						GameTooltip:SetText("Changes export format to Legible.");
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>
+				</Scripts>
+			</Button>
 			<Frame name="CEPGP_export_options">
 				<Size>
 					<AbsDimension x="200" y="240" />

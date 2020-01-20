@@ -1,5 +1,5 @@
 --[[ Globals ]]--
-CEPGP_VERSION = "1.12.9.release-wraith";
+CEPGP_VERSION = "1.12.10.release-wraith";
 SLASH_CEPGP1 = "/CEPGP";
 SLASH_CEPGP2 = "/cep";
 CEPGP_VERSION_NOTIFIED = false;
